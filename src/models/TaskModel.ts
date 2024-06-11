@@ -1,7 +1,7 @@
-import { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import { Task } from '../types/taskTypes';
 
-const taskSchema = new Schema<Task>({
+const taskSchema = new mongoose.Schema<Task>({
     title: {
         type: String,
         required: true,
@@ -12,10 +12,10 @@ const taskSchema = new Schema<Task>({
         default: 'todo'
     },
     board: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Board',
         required: true
     },
 });
 
-export default taskSchema;
+export default mongoose.model<Task>("Task", taskSchema);
