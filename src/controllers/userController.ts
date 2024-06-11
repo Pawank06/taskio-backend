@@ -48,4 +48,41 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createUser };
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password} = req.body;
+
+  if(!email || !password){
+    const error = createHttpError(400, "All Fields are Required")
+    return next(error)
+  }
+
+  try {
+    const user = await userModel.findOne({email})
+
+    if(!user){
+      const error = createHttpError(401, "User do not exist")
+      return next(error)
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if(isMatch){
+      const token = sign({sub: user._id}, config.jwtSecret as string, {
+        expiresIn: "7d"
+      })
+      res.cookie("token", token, {httpOnly: true, secure: true})
+
+      res.status(200).json({
+        message: "User logged in successfully",
+        data: user,
+      })
+    }
+
+
+  } catch (error) {
+    const err = createHttpError(500, "Error while logging in user")
+    return next(err)
+  }
+}
+
+export { createUser, loginUser };
