@@ -9,7 +9,6 @@ const boardSchema = new mongoose.Schema<Board>(
     },
     description: {
       type: String,
-      required: true,
     },
     tasks: [
       {
