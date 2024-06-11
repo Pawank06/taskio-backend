@@ -14,6 +14,9 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
     return next(createHttpError(401, "Authorization token is required"));
   }
 
+  // console.log(token)
+  
+
   try {
     const decoded = verify(token, config.jwtSecret as string);
     // If token is valid, you can attach the decoded payload to the request object for later use
